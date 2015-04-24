@@ -3,12 +3,14 @@
          xmlns="http://nant.sf.net/release/0.92/nant.xsd">
   
   <loadtasks assembly="C:\Program Files\CSG\DevTools\Lib\NAnt\Dev.NAnt.Tasks.dll" />
+  <include buildfile="Builds\init-properties.include" />
   
   <target name="run">
     <nuget action="restore" />
+	<assemblyinfo version="${version.assembly}" />
     <msbuild project="BambooTray.sln" />
     
-    <chocopack nuspec="Builds\Chocolatey\bamboo-tray.nuspec" version="1.0.0.3" feed="chocolatey.org" />
+    <chocopack nuspec="Builds\Chocolatey\bamboo-tray.nuspec" version="${version.package}" feed="chocolatey.org" />
   </target>
 
 </project>

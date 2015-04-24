@@ -3,4 +3,7 @@
 
   <property name="build.branch.default" value="master" />
 
+  <initproperty name="version.prefix" default="1.0.0" /> 
+  <initproperty name="version.assembly" default="${version::assembly(version.prefix)}" />
+  <initproperty name="version.package" default="${version::package(version.prefix)}" />
 </project>
