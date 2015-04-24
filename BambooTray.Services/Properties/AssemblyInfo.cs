@@ -9,6 +9,11 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyProduct("BambooTray.Services")]
 
+[assembly: AssemblyCompany("Kevin Ortman")]
+[assembly: AssemblyCopyright("Copyright © Kevin Ortman 2015")]
+[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCulture("")]
+
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 
 // COM, set the ComVisible attribute to true on that type.
