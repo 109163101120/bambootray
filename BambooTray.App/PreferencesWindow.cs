@@ -31,24 +31,75 @@ namespace BambooTray.App
             TraySettings traySettings = _settingsService.TraySettings;
 
             numericPollTime.Value = ToSeconds(traySettings.PollTime, (int)numericPollTime.Minimum, (int)numericPollTime.Maximum);
-            numericBalloonTooltipTimeout.Value = ToSeconds(traySettings.BalloonToolTipTimeOut, (int)numericBalloonTooltipTimeout.Minimum, (int)numericBalloonTooltipTimeout.Maximum);
-            checkboxEnableBalloonNotifications.Checked = traySettings.EnableBaloonNotifications;
-
             numericPollTime.ValueChanged += (sender, args) =>
             {
-                traySettings.PollTime = ToMilliseconds((int) numericPollTime.Value);
+                traySettings.PollTime = ToMilliseconds((int)numericPollTime.Value);
                 _settingsService.SaveTraySettings();
             };
 
-            numericBalloonTooltipTimeout.ValueChanged += (sender, args) =>
+            checkboxAnimatedBuildIcon.Checked = traySettings.AnimatedBuildIcon;
+            checkboxAnimatedBuildIcon.CheckedChanged += (sender, args) =>
             {
-                traySettings.BalloonToolTipTimeOut = ToMilliseconds((int) numericBalloonTooltipTimeout.Value);
+                traySettings.AnimatedBuildIcon = checkboxAnimatedBuildIcon.Checked;
                 _settingsService.SaveTraySettings();
             };
 
+            checkboxEnableBalloonNotifications.Checked = traySettings.EnableBalloonNotifications;
             checkboxEnableBalloonNotifications.CheckedChanged += (sender, args) =>
             {
-                traySettings.EnableBaloonNotifications = checkboxEnableBalloonNotifications.Checked;
+                traySettings.EnableBalloonNotifications = checkboxEnableBalloonNotifications.Checked;
+                _settingsService.SaveTraySettings();
+            };
+
+            numericBalloonTooltipTimeout.Value = ToSeconds(traySettings.BalloonToolTipTimeOut, (int)numericBalloonTooltipTimeout.Minimum, (int)numericBalloonTooltipTimeout.Maximum);
+            numericBalloonTooltipTimeout.ValueChanged += (sender, args) =>
+            {
+                traySettings.BalloonToolTipTimeOut = ToMilliseconds((int)numericBalloonTooltipTimeout.Value);
+                _settingsService.SaveTraySettings();
+            };
+
+            foreach (var item in Enum.GetValues(typeof(NotificationType)))
+            {
+                checkBalloonNotifications.Items.Add(item, traySettings.BalloonNotifications.Contains((NotificationType)item));
+            }
+            checkBalloonNotifications.ItemCheck += (sender, args) =>
+            {
+                var item = (NotificationType)checkBalloonNotifications.Items[args.Index];
+                if (args.NewValue == CheckState.Checked)
+                    traySettings.BalloonNotifications.Add(item);
+                else
+                    traySettings.BalloonNotifications.RemoveAll(i => i == item);
+                _settingsService.SaveTraySettings();
+            };
+
+            checkboxEnableSpeechNotifications.Checked = traySettings.EnableSpeechNotifications;
+            checkboxEnableSpeechNotifications.CheckedChanged += (sender, args) =>
+            {
+                traySettings.EnableSpeechNotifications = checkboxEnableSpeechNotifications.Checked;
+                _settingsService.SaveTraySettings();
+            };
+
+            comboSpeechVoice.Items.Clear();
+            var voices = new SpeechController().Voices.ToArray();
+            comboSpeechVoice.Items.AddRange(voices);
+            comboSpeechVoice.SelectedItem = string.IsNullOrEmpty(traySettings.SpeechNotificationVoice)? voices.FirstOrDefault(): traySettings.SpeechNotificationVoice;
+            comboSpeechVoice.SelectedValueChanged += (sender, args) =>
+            {
+                traySettings.SpeechNotificationVoice = comboSpeechVoice.SelectedItem?.ToString();
+                _settingsService.SaveTraySettings();
+            };
+
+            foreach (var item in Enum.GetValues(typeof(NotificationType)))
+            {
+                checkSpeechNotifications.Items.Add(item, traySettings.SpeechNotifications.Contains((NotificationType)item));
+            }
+            checkSpeechNotifications.ItemCheck += (sender, args) =>
+            {
+                var item = (NotificationType)checkSpeechNotifications.Items[args.Index];
+                if (args.NewValue == CheckState.Checked)
+                    traySettings.SpeechNotifications.Add(item);
+                else
+                    traySettings.SpeechNotifications.RemoveAll(i => i == item);
                 _settingsService.SaveTraySettings();
             };
         }

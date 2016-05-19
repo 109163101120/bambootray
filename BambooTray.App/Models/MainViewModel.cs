@@ -6,6 +6,8 @@ namespace BambooTray.App.Models
     {
         public static readonly MainViewModel Null = new MainViewModel();
 
+        public string Image { get; set; }
+
         public string ServerName { get; set; }
 
         public string ProjectName { get; set; }

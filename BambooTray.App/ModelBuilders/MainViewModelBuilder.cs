@@ -20,6 +20,7 @@ namespace BambooTray.App.ModelBuilders
 
             return new MainViewModel
                        {
+                           Image = plan.IsActive ? "Building": (string.IsNullOrEmpty(lastResult?.State) ? "Offline" : lastResult?.State),
                            ServerName = string.IsNullOrEmpty(server.Name) ? server.Address : server.Name,
                            ProjectName = plan.ProjectName,
                            PlanKey = plan.Key,
@@ -29,7 +30,7 @@ namespace BambooTray.App.ModelBuilders
                            LatestResultUrl = string.Concat(planSummaryUrl, "/latest"),
                            BuildActivity = plan.IsActive ? "Building" : "Sleeping",
                            BuildActive = plan.IsActive,
-                           BuildStatus = lastResult != null ? lastResult.State : string.Empty,
+                           BuildStatus = lastResult?.State ?? string.Empty,
                            BuildBroken = lastResult != null && lastResult.State == "Failed",
                            LastBuildTime =
                                lastResultDetail != null ? lastResultDetail.BuildRelativeTime : string.Empty,

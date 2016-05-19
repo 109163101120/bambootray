@@ -38,24 +38,26 @@ namespace BambooTray.App
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.buildsListView = new System.Windows.Forms.ListView();
-            this.serverColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.projectColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.planColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.buildActivityColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.buildStatusColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.lastBuildTimeColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.lastBuildDurationColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.lastBuildNumberColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.lastVcsRevisionColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.successfulTestCountColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.failedTestCountColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.buildsListView = new BrightIdeasSoftware.ObjectListView();
+            this.serverColumnHeader = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.projectColumnHeader = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.planColumnHeader = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.buildActivityColumnHeader = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.buildStatusColumnHeader = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.lastBuildTimeColumnHeader = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.lastBuildDurationColumnHeader = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.lastBuildNumberColumnHeader = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.lastVcsRevisionColumnHeader = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.successfulTestCountColumnHeader = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.failedTestCountColumnHeader = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.contextMenuTray = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.menuItemExit = new System.Windows.Forms.ToolStripMenuItem();
             this.iconTimer = new System.Windows.Forms.Timer(this.components);
             this.mainViewModelBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.showMainWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.buildsListView)).BeginInit();
             this.contextMenuTray.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.mainViewModelBindingSource)).BeginInit();
             this.SuspendLayout();
@@ -113,6 +115,18 @@ namespace BambooTray.App
             // 
             // buildsListView
             // 
+            this.buildsListView.AllColumns.Add(this.serverColumnHeader);
+            this.buildsListView.AllColumns.Add(this.projectColumnHeader);
+            this.buildsListView.AllColumns.Add(this.planColumnHeader);
+            this.buildsListView.AllColumns.Add(this.buildActivityColumnHeader);
+            this.buildsListView.AllColumns.Add(this.buildStatusColumnHeader);
+            this.buildsListView.AllColumns.Add(this.lastBuildTimeColumnHeader);
+            this.buildsListView.AllColumns.Add(this.lastBuildDurationColumnHeader);
+            this.buildsListView.AllColumns.Add(this.lastBuildNumberColumnHeader);
+            this.buildsListView.AllColumns.Add(this.lastVcsRevisionColumnHeader);
+            this.buildsListView.AllColumns.Add(this.successfulTestCountColumnHeader);
+            this.buildsListView.AllColumns.Add(this.failedTestCountColumnHeader);
+            this.buildsListView.CellEditUseWholeCell = false;
             this.buildsListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.serverColumnHeader,
             this.projectColumnHeader,
@@ -125,6 +139,7 @@ namespace BambooTray.App
             this.lastVcsRevisionColumnHeader,
             this.successfulTestCountColumnHeader,
             this.failedTestCountColumnHeader});
+            this.buildsListView.Cursor = System.Windows.Forms.Cursors.Default;
             this.buildsListView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.buildsListView.FullRowSelect = true;
             this.buildsListView.Location = new System.Drawing.Point(0, 24);
@@ -137,55 +152,68 @@ namespace BambooTray.App
             // 
             // serverColumnHeader
             // 
+            this.serverColumnHeader.AspectName = "ServerName";
+            this.serverColumnHeader.ImageAspectName = "Image";
             this.serverColumnHeader.Text = "Server";
             this.serverColumnHeader.Width = 80;
             // 
             // projectColumnHeader
             // 
+            this.projectColumnHeader.AspectName = "ProjectName";
             this.projectColumnHeader.Text = "Project";
             this.projectColumnHeader.Width = 74;
             // 
             // planColumnHeader
             // 
+            this.planColumnHeader.AspectName = "ShortPlanName";
             this.planColumnHeader.Text = "Plan";
             this.planColumnHeader.Width = 119;
             // 
             // buildActivityColumnHeader
             // 
+            this.buildActivityColumnHeader.AspectName = "BuildActivity";
+            this.buildActivityColumnHeader.AspectToStringFormat = "";
             this.buildActivityColumnHeader.Text = "Activity";
             // 
             // buildStatusColumnHeader
             // 
+            this.buildStatusColumnHeader.AspectName = "BuildStatus";
             this.buildStatusColumnHeader.Text = "Status";
             this.buildStatusColumnHeader.Width = 70;
             // 
             // lastBuildTimeColumnHeader
             // 
+            this.lastBuildTimeColumnHeader.AspectName = "LastBuildTime";
             this.lastBuildTimeColumnHeader.Text = "Last Build";
             this.lastBuildTimeColumnHeader.Width = 85;
             // 
             // lastBuildDurationColumnHeader
             // 
+            this.lastBuildDurationColumnHeader.AspectName = "LastBuildDuration";
             this.lastBuildDurationColumnHeader.Text = "Duration";
             this.lastBuildDurationColumnHeader.Width = 80;
             // 
             // lastBuildNumberColumnHeader
             // 
+            this.lastBuildNumberColumnHeader.AspectName = "LastBuildNumber";
             this.lastBuildNumberColumnHeader.Text = "Build Number";
             this.lastBuildNumberColumnHeader.Width = 80;
             // 
             // lastVcsRevisionColumnHeader
             // 
+            this.lastVcsRevisionColumnHeader.AspectName = "LastVcsRevision";
             this.lastVcsRevisionColumnHeader.Text = "VCS Revision";
             this.lastVcsRevisionColumnHeader.Width = 80;
             // 
             // successfulTestCountColumnHeader
             // 
+            this.successfulTestCountColumnHeader.AspectName = "SuccessfulTestCount";
             this.successfulTestCountColumnHeader.Text = "Passing Tests";
             this.successfulTestCountColumnHeader.Width = 80;
             // 
             // failedTestCountColumnHeader
             // 
+            this.failedTestCountColumnHeader.AspectName = "FailedTestCount";
             this.failedTestCountColumnHeader.Text = "Failing Tests";
             this.failedTestCountColumnHeader.Width = 80;
             // 
@@ -200,14 +228,15 @@ namespace BambooTray.App
             // contextMenuTray
             // 
             this.contextMenuTray.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.showMainWindowToolStripMenuItem,
             this.menuItemExit});
             this.contextMenuTray.Name = "contextMenuTray";
-            this.contextMenuTray.Size = new System.Drawing.Size(93, 26);
+            this.contextMenuTray.Size = new System.Drawing.Size(193, 70);
             // 
             // menuItemExit
             // 
             this.menuItemExit.Name = "menuItemExit";
-            this.menuItemExit.Size = new System.Drawing.Size(92, 22);
+            this.menuItemExit.Size = new System.Drawing.Size(192, 22);
             this.menuItemExit.Text = "E&xit";
             this.menuItemExit.Click += new System.EventHandler(this.ExitToolStripMenuItemClick);
             // 
@@ -219,6 +248,14 @@ namespace BambooTray.App
             // mainViewModelBindingSource
             // 
             this.mainViewModelBindingSource.DataSource = typeof(BambooTray.App.Models.MainViewModel);
+            // 
+            // showMainWindowToolStripMenuItem
+            // 
+            this.showMainWindowToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.showMainWindowToolStripMenuItem.Name = "showMainWindowToolStripMenuItem";
+            this.showMainWindowToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
+            this.showMainWindowToolStripMenuItem.Text = "Show Status Window";
+            this.showMainWindowToolStripMenuItem.Click += new System.EventHandler(this.showMainWindowToolStripMenuItem_Click);
             // 
             // MainWindow
             // 
@@ -233,8 +270,10 @@ namespace BambooTray.App
             this.MinimizeBox = false;
             this.Name = "MainWindow";
             this.Text = "Bamboo Tray";
+            this.Deactivate += new System.EventHandler(this.MainWindow_Deactivate);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.buildsListView)).EndInit();
             this.contextMenuTray.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.mainViewModelBindingSource)).EndInit();
             this.ResumeLayout(false);
@@ -250,23 +289,24 @@ namespace BambooTray.App
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.BindingSource mainViewModelBindingSource;
-        private System.Windows.Forms.ListView buildsListView;
-        private System.Windows.Forms.ColumnHeader serverColumnHeader;
-        private System.Windows.Forms.ColumnHeader projectColumnHeader;
-        private System.Windows.Forms.ColumnHeader planColumnHeader;
-        private System.Windows.Forms.ColumnHeader buildActivityColumnHeader;
-        private System.Windows.Forms.ColumnHeader buildStatusColumnHeader;
-        private System.Windows.Forms.ColumnHeader lastBuildTimeColumnHeader;
-        private System.Windows.Forms.ColumnHeader lastBuildDurationColumnHeader;
-        private System.Windows.Forms.ColumnHeader lastBuildNumberColumnHeader;
-        private System.Windows.Forms.ColumnHeader lastVcsRevisionColumnHeader;
-        private System.Windows.Forms.ColumnHeader successfulTestCountColumnHeader;
-        private System.Windows.Forms.ColumnHeader failedTestCountColumnHeader;
+        private BrightIdeasSoftware.ObjectListView buildsListView;
+        private BrightIdeasSoftware.OLVColumn serverColumnHeader;
+        private BrightIdeasSoftware.OLVColumn projectColumnHeader;
+        private BrightIdeasSoftware.OLVColumn planColumnHeader;
+        private BrightIdeasSoftware.OLVColumn buildActivityColumnHeader;
+        private BrightIdeasSoftware.OLVColumn buildStatusColumnHeader;
+        private BrightIdeasSoftware.OLVColumn lastBuildTimeColumnHeader;
+        private BrightIdeasSoftware.OLVColumn lastBuildDurationColumnHeader;
+        private BrightIdeasSoftware.OLVColumn lastBuildNumberColumnHeader;
+        private BrightIdeasSoftware.OLVColumn lastVcsRevisionColumnHeader;
+        private BrightIdeasSoftware.OLVColumn successfulTestCountColumnHeader;
+        private BrightIdeasSoftware.OLVColumn failedTestCountColumnHeader;
         private System.Windows.Forms.NotifyIcon notifyIcon;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.Timer iconTimer;
         private System.Windows.Forms.ContextMenuStrip contextMenuTray;
         private System.Windows.Forms.ToolStripMenuItem menuItemExit;
+        private System.Windows.Forms.ToolStripMenuItem showMainWindowToolStripMenuItem;
     }
 }
 
