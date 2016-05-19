@@ -12,7 +12,8 @@ namespace BambooTray.Services
     {
         private const string InfoServiceEndPoint = "/rest/api/latest/info";
 
-        private const string PlanServiceEndPoint = "/rest/api/latest/plan";
+        private const int PlanServiceIncrement = 25;  // 25 is default according documentation, specifying a larger number does not have effect
+        private readonly string PlanServiceEndPoint = $"/rest/api/latest/plan?start-index={{0}}&max-result={PlanServiceIncrement}";
 
         private const string PlanDetailServiceEndPoint = "/rest/api/latest/plan/{0}";
 
@@ -27,11 +28,16 @@ namespace BambooTray.Services
 
         public IList<PlanDetailResonse> GetAllPlans()
         {
-            var plans = _serviceInvoker.Invoke<PlanResponse>(new InvokeServiceRequest(PlanServiceEndPoint)).Plans.Plan;
+            List<Plans> responses = new List<Plans>();
+            for (int startIndex = 0; startIndex == 0 || responses.LastOrDefault()?.Size > startIndex; startIndex += PlanServiceIncrement)
+                responses.Add(this._serviceInvoker.Invoke<PlanResponse>(new InvokeServiceRequest(string.Format(PlanServiceEndPoint, startIndex))).Plans);
+
             return
-                plans.Select(
-                    plan =>
-                    GetPlanDetail(plan.Key)).ToList();
+                responses.SelectMany(list => list.Plan)
+                         .AsParallel()
+                         .Select(plan => this.GetPlanDetail(plan.Key))
+                         .OrderBy(plan=>plan.Name)
+                         .ToList();
         }
 
         public PlanDetailResonse GetPlanDetail(string key)
