@@ -55,6 +55,7 @@ namespace BambooTray.App
             this.menuItemExit = new System.Windows.Forms.ToolStripMenuItem();
             this.iconTimer = new System.Windows.Forms.Timer(this.components);
             this.mainViewModelBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.showMainWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.contextMenuTray.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.mainViewModelBindingSource)).BeginInit();
@@ -200,14 +201,15 @@ namespace BambooTray.App
             // contextMenuTray
             // 
             this.contextMenuTray.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.showMainWindowToolStripMenuItem,
             this.menuItemExit});
             this.contextMenuTray.Name = "contextMenuTray";
-            this.contextMenuTray.Size = new System.Drawing.Size(93, 26);
+            this.contextMenuTray.Size = new System.Drawing.Size(193, 70);
             // 
             // menuItemExit
             // 
             this.menuItemExit.Name = "menuItemExit";
-            this.menuItemExit.Size = new System.Drawing.Size(92, 22);
+            this.menuItemExit.Size = new System.Drawing.Size(192, 22);
             this.menuItemExit.Text = "E&xit";
             this.menuItemExit.Click += new System.EventHandler(this.ExitToolStripMenuItemClick);
             // 
@@ -219,6 +221,14 @@ namespace BambooTray.App
             // mainViewModelBindingSource
             // 
             this.mainViewModelBindingSource.DataSource = typeof(BambooTray.App.Models.MainViewModel);
+            // 
+            // showMainWindowToolStripMenuItem
+            // 
+            this.showMainWindowToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.showMainWindowToolStripMenuItem.Name = "showMainWindowToolStripMenuItem";
+            this.showMainWindowToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
+            this.showMainWindowToolStripMenuItem.Text = "Show Status Window";
+            this.showMainWindowToolStripMenuItem.Click += new System.EventHandler(this.showMainWindowToolStripMenuItem_Click);
             // 
             // MainWindow
             // 
@@ -267,6 +277,7 @@ namespace BambooTray.App
         private System.Windows.Forms.Timer iconTimer;
         private System.Windows.Forms.ContextMenuStrip contextMenuTray;
         private System.Windows.Forms.ToolStripMenuItem menuItemExit;
+        private System.Windows.Forms.ToolStripMenuItem showMainWindowToolStripMenuItem;
     }
 }
 

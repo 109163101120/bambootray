@@ -29,7 +29,7 @@ namespace BambooTray.App.ModelBuilders
                            LatestResultUrl = string.Concat(planSummaryUrl, "/latest"),
                            BuildActivity = plan.IsActive ? "Building" : "Sleeping",
                            BuildActive = plan.IsActive,
-                           BuildStatus = lastResult != null ? lastResult.State : string.Empty,
+                           BuildStatus = lastResult?.State ?? string.Empty,
                            BuildBroken = lastResult != null && lastResult.State == "Failed",
                            LastBuildTime =
                                lastResultDetail != null ? lastResultDetail.BuildRelativeTime : string.Empty,

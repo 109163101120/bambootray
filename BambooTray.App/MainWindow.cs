@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using BambooTray.App.Models;
 using BambooTray.App.Properties;
 using BambooTray.Services;
+using BambooTray.Domain.Settings;
 
 namespace BambooTray.App
 {
@@ -26,6 +27,8 @@ namespace BambooTray.App
         private bool _applicationIsExiting;
 
         private List<MainViewModel> _lastBuildData;
+
+        private SpeechController _speech;
 
         private enum IconEnum
         {
@@ -56,6 +59,8 @@ namespace BambooTray.App
 
             notifyIcon.Icon = _statusIcons[IconEnum.Grey];
 
+            _speech = new SpeechController();
+            
             _lastBuildData = new List<MainViewModel>();
             buildsListView.SmallImageList = GetListViewImages();
 
@@ -76,7 +81,7 @@ namespace BambooTray.App
         private static List<Icon> GetBuildingIcons(int numberOfIcons)
         {
             var icons = new List<Icon>();
-            for (var i = 1; i < numberOfIcons; i++)
+            for (var i = 1; i < numberOfIcons+1; i++)
             {
                 var bitmap = Resources.ResourceManager.GetObject("BambooYellow" + i) as Bitmap;
                 if (bitmap != null)
@@ -118,18 +123,18 @@ namespace BambooTray.App
 
             iconTimer.Enabled = building;
 
-            if (!iconTimer.Enabled)
+            if (!building)
             {
-                notifyIcon.Icon = broken
-                    ? _statusIcons[IconEnum.Red]
-                    : _statusIcons[IconEnum.Green];
+                if (broken)
+                    notifyIcon.Icon = _statusIcons[IconEnum.Red];
+                else
+                    notifyIcon.Icon = _statusIcons[IconEnum.Green];
             }
         }
 
         private void DoNotifications(IEnumerable<MainViewModel> currentBuildData)
         {
-            if (!_settingsService.TraySettings.EnableBaloonNotifications)
-                return;
+            List<NotificationModel> notifications = new List<NotificationModel>();
 
             foreach (var currentBuild in currentBuildData)
             {
@@ -141,37 +146,45 @@ namespace BambooTray.App
                         // Build Status has just changed... 
                         if (lastBuild.BuildBroken && !currentBuild.BuildBroken)
                         {
-                            notifyIcon.ShowBalloonTip(
-                                _settingsService.TraySettings.BalloonToolTipTimeOut,
-                                string.Format("{0} {1}: Fixed!", currentBuild.ProjectName, currentBuild.PlanKey),
+                            notifications.Add(new NotificationModel( $"{currentBuild.PlanName}: Fixed!",
                                 "Recent checkins have fixed the build.", 
-                                ToolTipIcon.Info);
+                                ToolTipIcon.Info,
+                                NotificationType.Fixed));
                         }
                         else if (!lastBuild.BuildBroken && currentBuild.BuildBroken)
                         {
-                            notifyIcon.ShowBalloonTip(
-                                _settingsService.TraySettings.BalloonToolTipTimeOut,
-                                string.Format("{0} {1}: Broken!", currentBuild.ProjectName, currentBuild.PlanKey),
+                            notifications.Add(new NotificationModel($"{currentBuild.PlanName}: Broken!",
                                 "Recent checkins have broken the build.",
-                                ToolTipIcon.Error);
+                                ToolTipIcon.Error,
+                                NotificationType.Broken));
                         }
                         else if (!lastBuild.BuildBroken && !currentBuild.BuildBroken)
                         {
-                            notifyIcon.ShowBalloonTip(
-                                _settingsService.TraySettings.BalloonToolTipTimeOut,
-                                string.Format("{0} {1}: Build Successful!", currentBuild.ProjectName, currentBuild.PlanKey),
+                            notifications.Add(new NotificationModel($"{currentBuild.PlanName}: Build Successful!",
                                 "Yet another successful build.",
-                                ToolTipIcon.Info);
+                                ToolTipIcon.Info,
+                                NotificationType.Succesfull));
                         }
                         else if (lastBuild.BuildBroken && currentBuild.BuildBroken)
                         {
-                            notifyIcon.ShowBalloonTip(
-                                _settingsService.TraySettings.BalloonToolTipTimeOut,
-                                string.Format("{0} {1}: Broken!", currentBuild.ProjectName, currentBuild.PlanKey),
+                            notifications.Add(new NotificationModel($"{currentBuild.PlanName}: Broken!",
                                 "The build is still broken.",
-                                ToolTipIcon.Error);
+                                ToolTipIcon.Error,
+                                NotificationType.RemainingBroken));
                         }
                     }
+                        }
+                    }
+
+            foreach (var item in notifications)
+            {
+                if (_settingsService.TraySettings.EnableBalloonNotifications && _settingsService.TraySettings.BalloonNotifications.Contains(item.Type))
+                    notifyIcon.ShowBalloonTip(_settingsService.TraySettings.BalloonToolTipTimeOut, item.Caption, item.Message, item.Level);
+
+                if (_settingsService.TraySettings.EnableSpeechNotifications && _settingsService.TraySettings.SpeechNotifications.Contains(item.Type))
+                {
+                    _speech.SelectedVoice = _settingsService.TraySettings.SpeechNotificationVoice;
+                    _speech.Play(item.Caption.Substring(0, item.Caption.IndexOf(':')) + " reports " + item.Message);
                 }
             }
         }
@@ -302,14 +315,16 @@ namespace BambooTray.App
 
         private void BuildIconTimerTick(object sender, EventArgs e)
         {
+            _currentBuildIcon++;
+            if (_currentBuildIcon >= _buildingIcons.Count || !_settingsService.TraySettings.AnimatedBuildIcon)
+                _currentBuildIcon = 0;
+
             // This isn't very nice, but to animate the tray icon when a build is in progress.
             notifyIcon.Icon = _buildingIcons[_currentBuildIcon];
-            
-            _currentBuildIcon++;
-            if (_currentBuildIcon == 3)
-            {
-                _currentBuildIcon = 0;
-            }
+        }
+        private void showMainWindowToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            NotifyIconClick(sender, new MouseEventArgs(MouseButtons.Left, 1, 0, 0, 0));
         }
     }
 

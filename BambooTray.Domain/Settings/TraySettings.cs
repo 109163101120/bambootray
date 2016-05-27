@@ -5,28 +5,50 @@
     using System.Xml.Serialization;
 
     [Serializable]
+    public enum NotificationType
+    {
+        Broken,
+        RemainingBroken,
+        Fixed,
+        Succesfull,
+    }
+
+    [Serializable]
     [XmlRoot("bambooTray")]
     public class TraySettings
     {
-        public TraySettings()
-        {
-            Servers = new List<Server>();
-            PollTime = 20000;
-            EnableBaloonNotifications = true;
-            BalloonToolTipTimeOut = 2000;
-        }
-
         [XmlArray("servers")]
         [XmlArrayItem("server", typeof(Server))]
-        public List<Server> Servers { get; private set; }
-        
+        public List<Server> Servers { get; private set; } = new List<Server>();
+
         [XmlAttribute("pollingtime")]
-        public int PollTime { get; set; }
+        public int PollTime { get; set; } = 20000;
 
-        [XmlAttribute("baloonNotifications")]
-        public bool EnableBaloonNotifications { get; set; }
+        [XmlAttribute("animatedBuildIcon")]
+        public bool AnimatedBuildIcon { get; set; } = true;
 
-        [XmlAttribute("baloonNotificationTimeout")]
-        public int BalloonToolTipTimeOut { get; set; }
+        [XmlAttribute("balloonNotifications")]
+        public bool EnableBalloonNotifications { get; set; } = true;
+
+        [XmlAttribute("balloonNotificationTimeout")]
+        public int BalloonToolTipTimeOut { get; set; } = 2000;
+
+        [XmlAttribute("balloonNotificationTypes")]
+        public List<NotificationType> BalloonNotifications { get; set; } = null;
+
+        [XmlAttribute("speechNotifications")]
+        public bool EnableSpeechNotifications { get; set; } = true;
+
+        [XmlAttribute("speechNotificationTypes")]
+        public List<NotificationType> SpeechNotifications { get; set; } = null;
+
+        [XmlAttribute("speechNotificationVoice")]
+        public string SpeechNotificationVoice { get; set; } = string.Empty;
+
+        [XmlAttribute("displayParam")]
+        public byte[] DisplayParameters { get; set; } = null;
+
+        [XmlAttribute("settingsVersion")]
+        public int Version { get; set; } = 0;
     }
 }

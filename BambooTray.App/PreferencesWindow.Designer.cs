@@ -42,11 +42,21 @@
             this.configureServerButton = new System.Windows.Forms.Button();
             this.removeServerButton = new System.Windows.Forms.Button();
             this.generalTabPage = new System.Windows.Forms.TabPage();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
+            this.groupSpeech = new System.Windows.Forms.GroupBox();
+            this.comboSpeechVoice = new System.Windows.Forms.ComboBox();
+            this.checkboxEnableSpeechNotifications = new System.Windows.Forms.CheckBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.checkSpeechNotifications = new System.Windows.Forms.CheckedListBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.groupBalloon = new System.Windows.Forms.GroupBox();
             this.checkboxEnableBalloonNotifications = new System.Windows.Forms.CheckBox();
-            this.numericPollTime = new System.Windows.Forms.NumericUpDown();
+            this.label3 = new System.Windows.Forms.Label();
+            this.checkBalloonNotifications = new System.Windows.Forms.CheckedListBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.numericBalloonTooltipTimeout = new System.Windows.Forms.NumericUpDown();
+            this.numericPollTime = new System.Windows.Forms.NumericUpDown();
+            this.label1 = new System.Windows.Forms.Label();
+            this.checkboxAnimatedBuildIcon = new System.Windows.Forms.CheckBox();
             this.preferencesTabControl.SuspendLayout();
             this.buildsTabPage.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -54,8 +64,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.serverViewModelBindingSource)).BeginInit();
             this.panel1.SuspendLayout();
             this.generalTabPage.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericPollTime)).BeginInit();
+            this.groupSpeech.SuspendLayout();
+            this.groupBalloon.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericBalloonTooltipTimeout)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericPollTime)).BeginInit();
             this.SuspendLayout();
             // 
             // preferencesTabControl
@@ -178,10 +190,10 @@
             // generalTabPage
             // 
             this.generalTabPage.BackColor = System.Drawing.SystemColors.Control;
-            this.generalTabPage.Controls.Add(this.numericBalloonTooltipTimeout);
+            this.generalTabPage.Controls.Add(this.checkboxAnimatedBuildIcon);
+            this.generalTabPage.Controls.Add(this.groupSpeech);
+            this.generalTabPage.Controls.Add(this.groupBalloon);
             this.generalTabPage.Controls.Add(this.numericPollTime);
-            this.generalTabPage.Controls.Add(this.checkboxEnableBalloonNotifications);
-            this.generalTabPage.Controls.Add(this.label2);
             this.generalTabPage.Controls.Add(this.label1);
             this.generalTabPage.Location = new System.Drawing.Point(4, 22);
             this.generalTabPage.Name = "generalTabPage";
@@ -190,37 +202,129 @@
             this.generalTabPage.TabIndex = 0;
             this.generalTabPage.Text = "General";
             // 
-            // label1
+            // groupSpeech
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 22);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(113, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Poll Time (in seconds):";
+            this.groupSpeech.Controls.Add(this.comboSpeechVoice);
+            this.groupSpeech.Controls.Add(this.checkboxEnableSpeechNotifications);
+            this.groupSpeech.Controls.Add(this.label4);
+            this.groupSpeech.Controls.Add(this.checkSpeechNotifications);
+            this.groupSpeech.Controls.Add(this.label5);
+            this.groupSpeech.Location = new System.Drawing.Point(236, 55);
+            this.groupSpeech.Name = "groupSpeech";
+            this.groupSpeech.Size = new System.Drawing.Size(219, 133);
+            this.groupSpeech.TabIndex = 10;
+            this.groupSpeech.TabStop = false;
+            this.groupSpeech.Text = "Speech Notifications";
             // 
-            // label2
+            // comboSpeechVoice
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 66);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(181, 13);
-            this.label2.TabIndex = 1;
-            this.label2.Text = "Balloon Tooltip Timeout (in seconds):";
+            this.comboSpeechVoice.FormattingEnabled = true;
+            this.comboSpeechVoice.Location = new System.Drawing.Point(80, 35);
+            this.comboSpeechVoice.Name = "comboSpeechVoice";
+            this.comboSpeechVoice.Size = new System.Drawing.Size(133, 21);
+            this.comboSpeechVoice.TabIndex = 9;
+            // 
+            // checkboxEnableSpeechNotifications
+            // 
+            this.checkboxEnableSpeechNotifications.AutoSize = true;
+            this.checkboxEnableSpeechNotifications.Location = new System.Drawing.Point(6, 19);
+            this.checkboxEnableSpeechNotifications.Name = "checkboxEnableSpeechNotifications";
+            this.checkboxEnableSpeechNotifications.Size = new System.Drawing.Size(59, 17);
+            this.checkboxEnableSpeechNotifications.TabIndex = 2;
+            this.checkboxEnableSpeechNotifications.Text = "Enable";
+            this.checkboxEnableSpeechNotifications.UseVisualStyleBackColor = true;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(6, 63);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(68, 13);
+            this.label4.TabIndex = 7;
+            this.label4.Text = "Notifications:";
+            // 
+            // checkSpeechNotifications
+            // 
+            this.checkSpeechNotifications.FormattingEnabled = true;
+            this.checkSpeechNotifications.Location = new System.Drawing.Point(80, 63);
+            this.checkSpeechNotifications.Name = "checkSpeechNotifications";
+            this.checkSpeechNotifications.Size = new System.Drawing.Size(133, 64);
+            this.checkSpeechNotifications.TabIndex = 8;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(6, 39);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(37, 13);
+            this.label5.TabIndex = 1;
+            this.label5.Text = "Voice:";
+            // 
+            // groupBalloon
+            // 
+            this.groupBalloon.Controls.Add(this.checkboxEnableBalloonNotifications);
+            this.groupBalloon.Controls.Add(this.label3);
+            this.groupBalloon.Controls.Add(this.checkBalloonNotifications);
+            this.groupBalloon.Controls.Add(this.label2);
+            this.groupBalloon.Controls.Add(this.numericBalloonTooltipTimeout);
+            this.groupBalloon.Location = new System.Drawing.Point(11, 55);
+            this.groupBalloon.Name = "groupBalloon";
+            this.groupBalloon.Size = new System.Drawing.Size(219, 133);
+            this.groupBalloon.TabIndex = 9;
+            this.groupBalloon.TabStop = false;
+            this.groupBalloon.Text = "Balloon Notifications";
             // 
             // checkboxEnableBalloonNotifications
             // 
             this.checkboxEnableBalloonNotifications.AutoSize = true;
-            this.checkboxEnableBalloonNotifications.Location = new System.Drawing.Point(12, 42);
+            this.checkboxEnableBalloonNotifications.Location = new System.Drawing.Point(6, 19);
             this.checkboxEnableBalloonNotifications.Name = "checkboxEnableBalloonNotifications";
-            this.checkboxEnableBalloonNotifications.Size = new System.Drawing.Size(158, 17);
+            this.checkboxEnableBalloonNotifications.Size = new System.Drawing.Size(59, 17);
             this.checkboxEnableBalloonNotifications.TabIndex = 2;
-            this.checkboxEnableBalloonNotifications.Text = "Enable Balloon Notifications";
+            this.checkboxEnableBalloonNotifications.Text = "Enable";
             this.checkboxEnableBalloonNotifications.UseVisualStyleBackColor = true;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(6, 63);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(68, 13);
+            this.label3.TabIndex = 7;
+            this.label3.Text = "Notifications:";
+            // 
+            // checkBalloonNotifications
+            // 
+            this.checkBalloonNotifications.FormattingEnabled = true;
+            this.checkBalloonNotifications.Location = new System.Drawing.Point(80, 63);
+            this.checkBalloonNotifications.Name = "checkBalloonNotifications";
+            this.checkBalloonNotifications.Size = new System.Drawing.Size(133, 64);
+            this.checkBalloonNotifications.TabIndex = 8;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(6, 39);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(143, 13);
+            this.label2.TabIndex = 1;
+            this.label2.Text = "Tooltip Timeout (in seconds):";
+            // 
+            // numericBalloonTooltipTimeout
+            // 
+            this.numericBalloonTooltipTimeout.Location = new System.Drawing.Point(162, 37);
+            this.numericBalloonTooltipTimeout.Maximum = new decimal(new int[] {
+            60,
+            0,
+            0,
+            0});
+            this.numericBalloonTooltipTimeout.Name = "numericBalloonTooltipTimeout";
+            this.numericBalloonTooltipTimeout.Size = new System.Drawing.Size(51, 20);
+            this.numericBalloonTooltipTimeout.TabIndex = 6;
             // 
             // numericPollTime
             // 
-            this.numericPollTime.Location = new System.Drawing.Point(199, 22);
+            this.numericPollTime.Location = new System.Drawing.Point(127, 6);
             this.numericPollTime.Maximum = new decimal(new int[] {
             60,
             0,
@@ -230,17 +334,24 @@
             this.numericPollTime.Size = new System.Drawing.Size(51, 20);
             this.numericPollTime.TabIndex = 5;
             // 
-            // numericBalloonTooltipTimeout
+            // label1
             // 
-            this.numericBalloonTooltipTimeout.Location = new System.Drawing.Point(199, 66);
-            this.numericBalloonTooltipTimeout.Maximum = new decimal(new int[] {
-            60,
-            0,
-            0,
-            0});
-            this.numericBalloonTooltipTimeout.Name = "numericBalloonTooltipTimeout";
-            this.numericBalloonTooltipTimeout.Size = new System.Drawing.Size(51, 20);
-            this.numericBalloonTooltipTimeout.TabIndex = 6;
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(8, 8);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(113, 13);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "Poll Time (in seconds):";
+            // 
+            // checkBoxAnimatedBuildIcon
+            // 
+            this.checkboxAnimatedBuildIcon.AutoSize = true;
+            this.checkboxAnimatedBuildIcon.Location = new System.Drawing.Point(11, 32);
+            this.checkboxAnimatedBuildIcon.Name = "checkBoxAnimatedBuildIcon";
+            this.checkboxAnimatedBuildIcon.Size = new System.Drawing.Size(114, 17);
+            this.checkboxAnimatedBuildIcon.TabIndex = 2;
+            this.checkboxAnimatedBuildIcon.Text = "Animate Build Icon";
+            this.checkboxAnimatedBuildIcon.UseVisualStyleBackColor = true;
             // 
             // PreferencesWindow
             // 
@@ -264,8 +375,12 @@
             this.panel1.ResumeLayout(false);
             this.generalTabPage.ResumeLayout(false);
             this.generalTabPage.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericPollTime)).EndInit();
+            this.groupSpeech.ResumeLayout(false);
+            this.groupSpeech.PerformLayout();
+            this.groupBalloon.ResumeLayout(false);
+            this.groupBalloon.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericBalloonTooltipTimeout)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericPollTime)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -289,5 +404,15 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.NumericUpDown numericBalloonTooltipTimeout;
         private System.Windows.Forms.NumericUpDown numericPollTime;
+        private System.Windows.Forms.GroupBox groupSpeech;
+        private System.Windows.Forms.CheckBox checkboxEnableSpeechNotifications;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.CheckedListBox checkSpeechNotifications;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.GroupBox groupBalloon;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.CheckedListBox checkBalloonNotifications;
+        private System.Windows.Forms.ComboBox comboSpeechVoice;
+        private System.Windows.Forms.CheckBox checkboxAnimatedBuildIcon;
     }
 }

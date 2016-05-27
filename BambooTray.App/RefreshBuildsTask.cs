@@ -14,7 +14,6 @@ namespace BambooTray.App
         private readonly ISettingsService _settingsService;
         private readonly Action<List<MainViewModel>> _onSuccess;
         private readonly Action<Exception> _onError;
-        private bool _firstTime = true;
 
         public RefreshBuildsTask(ISettingsService settingsService, Action<List<MainViewModel>> onSuccess, Action<Exception> onError)
         {
@@ -25,47 +24,37 @@ namespace BambooTray.App
 
         public async void Run()
         {
-            if (_firstTime)
-                _firstTime = false;
-            else
+            while (true)
+            {
+                DoWorkResults doWorkResults = await Task.Run(() => DoWork(_settingsService.CreateCopy()));
+
+                if (doWorkResults.MainViewModels != null)
+                    _onSuccess(doWorkResults.MainViewModels);
+                else
+                    _onError(doWorkResults.Exception);
+
                 await Task.Delay(_settingsService.TraySettings.PollTime);
-
-            DoWorkResults doWorkResults = await Task.Run(() => DoWork(_settingsService.CreateCopy()));
-
-            if (doWorkResults.MainViewModels != null)
-                _onSuccess(doWorkResults.MainViewModels);
-            else
-                _onError(doWorkResults.Exception);
-
-            Run();
+            }
         }
 
         private DoWorkResults DoWork(TraySettings traySettings)
         {
             var mainViewModels = new List<MainViewModel>();
-            List<Server> servers =
-                traySettings.Servers.Where(server => server.BuildPlans.Count > 0).ToList();
+            List<Server> servers = traySettings.Servers.Where(server => server.BuildPlans.Count > 0).ToList();
 
             foreach (var server in servers)
             {
                 try
                 {
-                    var bambooService = new BambooService(new Uri(server.Address), server.Username,
-                        server.PlaintextPassword);
-
+                    var bambooService = new BambooService(new Uri(server.Address), server.Username, server.PlaintextPassword);
                     foreach (var buildPlan in server.BuildPlans)
                     {
                         var planDetail = bambooService.GetPlanDetail(buildPlan.Key);
                         planDetail.Results = bambooService.GetPlanResults(buildPlan.Key);
 
                         var resultDetail = planDetail.Results.FirstOrDefault();
-
                         if (resultDetail != null)
-                        {
-                            var firstOrDefault = planDetail.Results.FirstOrDefault();
-                            if (firstOrDefault != null)
-                                firstOrDefault.Detail = bambooService.GetResultDetail(resultDetail.Key);
-                        }
+                            resultDetail.Detail = bambooService.GetResultDetail(resultDetail.Key);
 
                         mainViewModels.Add(MainViewModelBuilder.Build(planDetail, server));
                     }
