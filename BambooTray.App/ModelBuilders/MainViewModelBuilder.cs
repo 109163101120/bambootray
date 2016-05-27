@@ -20,7 +20,6 @@ namespace BambooTray.App.ModelBuilders
 
             return new MainViewModel
                        {
-                           Image = plan.IsActive ? "Building": (string.IsNullOrEmpty(lastResult?.State) ? "Offline" : lastResult?.State),
                            ServerName = string.IsNullOrEmpty(server.Name) ? server.Address : server.Name,
                            ProjectName = plan.ProjectName,
                            PlanKey = plan.Key,

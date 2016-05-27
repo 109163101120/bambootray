@@ -7,7 +7,6 @@ using System.Windows.Forms;
 using BambooTray.App.Models;
 using BambooTray.App.Properties;
 using BambooTray.Services;
-using BrightIdeasSoftware;
 using BambooTray.Domain.Settings;
 
 namespace BambooTray.App
@@ -61,11 +60,9 @@ namespace BambooTray.App
             notifyIcon.Icon = _statusIcons[IconEnum.Grey];
 
             _speech = new SpeechController();
-
+            
             _lastBuildData = new List<MainViewModel>();
             buildsListView.SmallImageList = GetListViewImages();
-            if(_settingsService.TraySettings?.DisplayParameters?.Length >0)
-                buildsListView.RestoreState(_settingsService.TraySettings.DisplayParameters);
 
             var refreshBuildsTask = new RefreshBuildsTask(_settingsService, RefreshView, NotifyConnectionError);
             refreshBuildsTask.Run();
@@ -150,7 +147,7 @@ namespace BambooTray.App
                         if (lastBuild.BuildBroken && !currentBuild.BuildBroken)
                         {
                             notifications.Add(new NotificationModel( $"{currentBuild.PlanName}: Fixed!",
-                                "Recent checkins have fixed the build.",
+                                "Recent checkins have fixed the build.", 
                                 ToolTipIcon.Info,
                                 NotificationType.Fixed));
                         }
@@ -176,8 +173,8 @@ namespace BambooTray.App
                                 NotificationType.RemainingBroken));
                         }
                     }
-                }
-            }
+                        }
+                    }
 
             foreach (var item in notifications)
             {
@@ -200,10 +197,8 @@ namespace BambooTray.App
             bool showBallonTip = notifyIcon.Icon != greyIcon;
             notifyIcon.Icon = greyIcon;
 
-            if(buildsListView.Objects != null)
-                foreach (object item in buildsListView.Objects)
-                    if (item is MainViewModel && item != null)
-                        (item as MainViewModel).Image = "Offline";
+            foreach (ListViewItem item in buildsListView.Items)
+                item.ImageKey = "Offline";
 
             if (showBallonTip)
             {
@@ -217,14 +212,48 @@ namespace BambooTray.App
 
         private void RefreshListView(IEnumerable<MainViewModel> mainViewModels)
         {
-            buildsListView.SetObjects(mainViewModels);
+            buildsListView.Items.Clear();
+            foreach (var mainViewModel in mainViewModels)
+            {
+                var lv = new ListViewItem
+                {
+                    Text = mainViewModel.ServerName,
+                    Tag = mainViewModel,
+                    ImageKey =
+                        mainViewModel.BuildActivity == "Building"
+                            ? mainViewModel.BuildActivity
+                            : (string.IsNullOrEmpty(mainViewModel.BuildStatus) ? "Offline" : mainViewModel.BuildStatus)
+                };
+
+                lv.SubItems.Add(mainViewModel.ProjectName);
+                lv.SubItems.Add(string.Format("{0}  ({1})", mainViewModel.ShortPlanName, mainViewModel.PlanKey));
+                lv.SubItems.Add(mainViewModel.BuildActivity);
+                lv.SubItems.Add(mainViewModel.BuildStatus);
+                lv.SubItems.Add(mainViewModel.LastBuildTime);
+                lv.SubItems.Add(mainViewModel.LastBuildDuration);
+                lv.SubItems.Add(mainViewModel.LastBuildNumber);
+                lv.SubItems.Add(mainViewModel.LastVcsRevision);
+                lv.SubItems.Add(mainViewModel.SuccessfulTestCount);
+                lv.SubItems.Add(mainViewModel.FailedTestCount);
+                buildsListView.Items.Add(lv);
+            }
         }
 
         private void ListViewDoubleClick(object sender, EventArgs e)
         {
-            var mainViewModel = buildsListView.SelectedObject as MainViewModel;
-            if (mainViewModel != null)
-                LaunchBrowser(mainViewModel.LatestResultUrl);
+            if (buildsListView.SelectedItems.Count > 0)
+            {
+                var selectedItem = buildsListView.SelectedItems[0];
+
+                if (selectedItem != null && selectedItem.Tag != null)
+                {
+                    var mainViewModel = selectedItem.Tag as MainViewModel;
+
+                    if (mainViewModel != null)
+                        LaunchBrowser(mainViewModel.LatestResultUrl);
+                }
+            }
+            
         }
 
         private void LaunchBrowser(string url)
@@ -293,13 +322,6 @@ namespace BambooTray.App
             // This isn't very nice, but to animate the tray icon when a build is in progress.
             notifyIcon.Icon = _buildingIcons[_currentBuildIcon];
         }
-
-        private void MainWindow_Deactivate(object sender, EventArgs e)
-        {
-            _settingsService.TraySettings.DisplayParameters = buildsListView.SaveState();
-            _settingsService.SaveTraySettings();
-        }
-
         private void showMainWindowToolStripMenuItem_Click(object sender, EventArgs e)
         {
             NotifyIconClick(sender, new MouseEventArgs(MouseButtons.Left, 1, 0, 0, 0));
@@ -308,43 +330,48 @@ namespace BambooTray.App
 
     internal class PreserveSelectedItemGuard : IDisposable
     {
-        private readonly ObjectListView _listView = null;
-        private readonly List<string> _selectedKeys = new List<string>();
-        private readonly string _focusedItemKey = string.Empty;
+        private readonly ListView _listView;
+        private readonly List<string> _selectedKeys;
+        private readonly string _focusedItemKey = "";
 
-        public PreserveSelectedItemGuard(ObjectListView listView)
+        public PreserveSelectedItemGuard(ListView listView)
         {
             _listView = listView;
 
-            if (listView.FocusedObject != null)
-                _focusedItemKey = (listView.FocusedObject as MainViewModel)?.PlanKey;
+            if (listView.FocusedItem != null)
+                _focusedItemKey = listView.FocusedItem.GetViewModel().PlanKey;
 
-            if (listView.SelectedObjects.Count > 0)
+            if (listView.SelectedItems.Count > 0)
             {
-                foreach (var item in listView.SelectedObjects)
-                {
-                    _selectedKeys.Add((item as MainViewModel)?.PlanKey);
-                }
+                _selectedKeys =
+                    listView.SelectedItems()
+                        .Select(item => item.GetViewModel().PlanKey)
+                        .Where(k => k.Length > 0)
+                        .ToList();
+            }
+            else
+            {
+                _selectedKeys = new List<string>();
             }
         }
 
         public void Dispose()
         {
-            List<object> itemsToSelect = new List<object>();
-            foreach (var item in _listView.Objects)
-            {
-                var key = (item as MainViewModel)?.PlanKey;
-                if (key != null && string.Equals(key, _focusedItemKey))
-                    _listView.FocusedObject = item;
+            var focusedItem = _listView.Items().FirstOrDefault(item => item.GetViewModel().PlanKey == _focusedItemKey);
 
-                if (_selectedKeys.Contains(key))
-                    itemsToSelect.Add(item);
-            }
+            if (focusedItem != null)
+                _listView.FocusedItem = focusedItem;
 
             if (_selectedKeys.Count > 0)
             {
-                _listView.SelectedObjects = itemsToSelect;
-                itemsToSelect.ForEach(_listView.EnsureModelVisible);
+                var itemsToSelect =
+                    _listView.Items().Where(item => _selectedKeys.Contains(item.GetViewModel().PlanKey));
+
+                foreach (var listViewItem in itemsToSelect)
+                {
+                    listViewItem.Selected = true;
+                    listViewItem.EnsureVisible();
+                }
             }
         }
     }
